@@ -1,3 +1,4 @@
+
 const routes = [
   {
     path: '/',
@@ -6,7 +7,13 @@ const routes = [
       { path: '', redirect: 'register' },
       { path: '/register', component: () => import('pages/RegisterPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
-      { path: '/admin', component: () => import('pages/AdminPage.vue') },
+      { path: '/admin', component: () => import('pages/AdminPage.vue'),
+        children:[
+         { path :'/manage-course', component:() => import('pages/admin-page/ManageCourse.vue')},
+         { path :'/manage-teacher', component:() => import('pages/admin-page/ManageTeacher.vue')},
+         { path :'/manage-student', component:() => import('pages/admin-page/ManageStudent.vue')}
+        ]
+       },
       { path: '/teacher', component: () => import('pages/TeacherPage.vue') },
       { path: '/student', component: () => import('pages/StudentPage.vue') },
     ],

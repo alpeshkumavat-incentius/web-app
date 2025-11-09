@@ -64,8 +64,6 @@ export default {
 
                 if (res.data.ok) {
                     alert(res.data.msg);
-                    console.log("Enters in login")
-                    console.log(res.data.user.user_type == 'Admin')
 
                     if (res.data.user.user_type == 'Admin') { this.$router.push('/admin') }
                     else if (res.data.user.user_type == 'Teacher') { this.$router.push('/teacher') }
