@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-from models import db, RegisterUser
+from models import db, RegisterUser, Students
 
 app = Flask(__name__)
 CORS(app,
@@ -32,6 +32,7 @@ def register():
     db.session.add(newUser)
     db.session.commit()
     
+    
     return jsonify({
         'ok':True,
         'msg':"User Register Successfully!"
@@ -39,21 +40,18 @@ def register():
     
     
     
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    
-   
-    
-    
+  
     entry = RegisterUser.query.filter_by(email=data['email'], password=data['password'],user_type=data['userType']).first()
     
     
     if entry:
-        
+          
         session['email'] = data['email']
         session['userType'] = data['userType']
-        
+   
         user = entry.to_dict()
         
         entry.isLogin = True
@@ -76,7 +74,7 @@ def login():
 
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/api/logout', methods=['POST'])
 def logout():
     
     session.pop("email", None)
@@ -89,20 +87,64 @@ def logout():
 
 
 
-@app.route('/check-session', methods=['GET'])
+@app.route('/api/check-session', methods=['GET'])
 def check_session():
-    if 'email' in session and 'userType' in session:
-        return jsonify({
+    res = {}
+
+    if 'email' in session:
+        res = jsonify({
             'ok' : True,
             'msg' : "Logged In",
             'userType' : session['userType']
         })
-    
-    return jsonify({
+    else:
+        res = jsonify({
             'ok' : False,
             'msg' : "Logged Out"
-        })
+        }) 
+    
+    return res
 
-        
+
+@app.route('/admin', methods=['GET', 'POST'])
+
+def admin():
+    res = session['email']
+    return res
+
+
+
+@app.route('/api/add-student', methods=['POST'])
+def add_student():
+    data = request.json
+    
+    newStu = Students(
+        first_name = data['first_name'],
+        last_name = data['last_name'],
+        enrollement_number =  data['enrollement_number']
+    )
+    
+    db.session.add(newStu)
+    db.session.commit()
+    
+    return jsonify({
+        'ok': True,
+        'msg': "Student added Successfully!!"
+    })
+
+
+
+@app.route('/api/read-student', methods=['GET'])
+def read_student():
+    all_students = db.session.execute(db.select(Students)).scalars().all()
+    
+    all = [row.to_dict() for row in all_students]
+    
+    return jsonify({
+        'ok': True,
+        'students' : all
+    })
+
+
 
 app.run(debug=True)
