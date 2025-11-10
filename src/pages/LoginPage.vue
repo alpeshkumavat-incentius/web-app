@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+// import { useRouter } from 'vue-router';
 import { useLoginStore } from 'src/stores/login-store';
 
 
@@ -44,33 +43,44 @@ export default {
         return {
             options: ['Admin', 'Teacher', 'Student'],
             store,
-            router: useRouter()
+            // router: useRouter()
         }
     },
     methods: {
 
         async onClick() {
             try {
-                const res = await axios({
-                    method: 'POST',
-                    url: 'http://127.0.0.1:5000/login',
-                    data: {
+                // const res = await this.$axios({
+                //     method: 'POST',
+                //     url: '/login',
+                    // data: {
+                    //     email: this.store.email,
+                    //     userType: this.store.userType,
+                    //     password: this.store.password
+                    // }
+                // });
+      
+                const res = await this.$axios.post('/login', {
                         email: this.store.email,
                         userType: this.store.userType,
                         password: this.store.password
-                    }
-                });
+                    })
 
 
                 if (res.data.ok) {
                     alert(res.data.msg);
+                   
+                  this.store.setLoginSession(res.data.user)
 
                     if (res.data.user.user_type == 'Admin') { this.$router.push('/admin') }
                     else if (res.data.user.user_type == 'Teacher') { this.$router.push('/teacher') }
                     else if (res.data.user.user_type == 'Student') { this.$router.push('/student') }
 
                 } else {
-                    alert("Enter Valid Password or Email !!!")
+                    this.$q.notify({type: 'negative', message: 'Enter Valid Password or Email !!!'})
+                    this.store.email = '';
+                    this.store.userType = '';
+                    this.store.password = '';
                     this.router.push('login');
                 }
 
@@ -79,6 +89,8 @@ export default {
                 console.error(error)
             }
         }
+
+        
     }
 }
 

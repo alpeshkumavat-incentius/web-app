@@ -1,13 +1,31 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
 
-export const useLoginStore = defineStore('counter', {
+
+import { defineStore } from "pinia";
+
+export const useLoginStore = defineStore("auth", {
   state: () => ({
+    session: {
     email: '',
     userType: '',
     password: '',
+    isLogin: false
+      
+    },
   }),
-})
+  getters: {},
 
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useLoginStore, import.meta.hot))
-}
+  actions: {
+    setLoginSession(data) {
+      this.session.isLogin = true;
+      this.session.email = data.email;
+      this.session.userType = data.user_type;
+    },
+    destroyLoginSession() {
+      this.session.isLogin = false;
+      this.session.email = "";
+      this.session.userType = "";
+
+    },
+  },
+  strict: process.env.DEBUGGING,
+});

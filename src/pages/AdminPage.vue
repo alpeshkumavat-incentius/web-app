@@ -29,7 +29,7 @@
 
                 <q-item clickable v-ripple>
                     <q-item-section>
-                        <q-btn color="teal-8" label="Manage Teachers" @click="onTeacher()"/>
+                        <q-btn color="teal-8" label="Manage Teachers" @click="onTeacher()" />
                     </q-item-section>
                 </q-item>
 
@@ -61,31 +61,39 @@ export default {
 
         return {
             leftDrawerOpen: ref(false),
-            router : useRouter(),
-            store : useLoginStore()
+            router: useRouter(),
+            store: useLoginStore()
         }
     },
     methods: {
 
         toggleLeftDrawer() {
-            this.leftDrawerOpen= !this.leftDrawerOpen
+            this.leftDrawerOpen = !this.leftDrawerOpen
         },
 
-        onLogout() {
-            alert("You Log out Succcessfully !!");
-            this.store.email = '';
-            this.store.userType = '';
-            this.store.password = '';
-            this.router.push('login');
+        async onLogout() {
+
+            const res = await this.$axios.post('/logout')
+
+            if (res.data.ok) {
+                this.store.destroyLoginSession();
+                alert("You Log out Succcessfully !!");
+                this.store.email = '';
+                this.store.userType = '';
+                this.store.password = '';
+                this.router.push('login')
+            }
+
+
         },
 
-        onTeacher(){
+        onTeacher() {
             this.router.push('manage-teacher')
         },
-        onStudent(){
+        onStudent() {
             this.router.push('manage-student')
         },
-        onCourse(){
+        onCourse() {
             this.router.push('manage-course')
         }
     }

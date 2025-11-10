@@ -38,7 +38,7 @@ export default defineConfig((ctx) => {
         node: 'node20',
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -89,10 +89,24 @@ export default defineConfig((ctx) => {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
+    // devServer: {
+    //   // https: true,
+    //   open: true, // opens browser window automatically
+    // },
+  
     devServer: {
-      // https: true,
+      // server: {
+      //   type: 'http'
+      // },
+      // port: 8080,
       open: true, // opens browser window automatically
+      proxy: {
+        '/api' : {
+          target: 'http://localhost:5000'
+        }
+      }
     },
+
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
@@ -109,7 +123,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Cookies', 'Notify'],
     },
 
     // animations: 'all', // --- includes all animations
