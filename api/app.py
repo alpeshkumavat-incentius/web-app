@@ -146,5 +146,19 @@ def read_student():
     })
 
 
+@app.route('/api/delete-student',methods=['POST'])
+def delete_student():
+    data = request.json
+    delete_student = db.session.get(Students, data['id'] )
+
+    db.session.delete(delete_student)
+    db.session.commit()
+    return jsonify({
+        'ok' : True,
+        'msg' : "Student Deleted Successfully!!"
+    })
+
+
+
 
 app.run(debug=True)
