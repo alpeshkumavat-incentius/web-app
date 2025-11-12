@@ -2,7 +2,7 @@
     <div>
         <q-card class="my-card  fixed-center">
             <q-card-section class="bg-secondary">
-                <div class="text-h6 ">Welcome! Now its Time to Login!</div>
+                <div class="text-h6 ">Welcome!! Now its Time to Login!</div>
             </q-card-section>
 
             <q-separator />
@@ -53,31 +53,31 @@ export default {
                 // const res = await this.$axios({
                 //     method: 'POST',
                 //     url: '/login',
-                    // data: {
-                    //     email: this.store.email,
-                    //     userType: this.store.userType,
-                    //     password: this.store.password
-                    // }
+                // data: {
+                //     email: this.store.email,
+                //     userType: this.store.userType,
+                //     password: this.store.password
+                // }
                 // });
-      
+
                 const res = await this.$axios.post('/login', {
-                        email: this.store.email,
-                        userType: this.store.userType,
-                        password: this.store.password
-                    })
+                    email: this.store.email,
+                    userType: this.store.userType,
+                    password: this.store.password
+                })
 
 
                 if (res.data.ok) {
                     alert(res.data.msg);
-                   
-                  this.store.setLoginSession(res.data.user)
+
+                    this.store.setLoginSession(res.data.user)
 
                     if (res.data.user.user_type == 'Admin') { this.$router.push('/admin') }
                     else if (res.data.user.user_type == 'Teacher') { this.$router.push('/teacher') }
                     else if (res.data.user.user_type == 'Student') { this.$router.push('/student') }
 
                 } else {
-                    this.$q.notify({type: 'negative', message: 'Enter Valid Password or Email !!!'})
+                    this.$q.notify({ type: 'negative', message: 'Enter Valid Password or Email !!!' })
                     this.store.email = '';
                     this.store.userType = '';
                     this.store.password = '';
@@ -90,7 +90,7 @@ export default {
             }
         }
 
-        
+
     }
 }
 
